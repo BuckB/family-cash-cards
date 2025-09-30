@@ -13,7 +13,7 @@ public class CashCardController {
 
     @GetMapping("/{requestedId}")
     public ResponseEntity<CashCard> findById() {
-        CashCard cashCard = new CashCard(99L, BigDecimal.valueOf(1000));
+        CashCard cashCard = new CashCard(99L, new BigDecimal("123.45"));
         return ResponseEntity.ok(cashCard);
     }
 }
