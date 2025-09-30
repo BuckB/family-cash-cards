@@ -31,4 +31,11 @@ class CashCardControllerTest {
         assertThat(expectedAmount).isEqualTo(123.45);
     }
 
+    @Test
+    void shouldReturn404WhenDataIsNotFound() {
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards/1", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isBlank();
+    }
+
 }
