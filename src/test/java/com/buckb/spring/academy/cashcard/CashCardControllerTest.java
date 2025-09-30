@@ -25,7 +25,7 @@ class CashCardControllerTest {
 
         DocumentContext responseJson = JsonPath.parse(response.getBody());
         Number expectedId = responseJson.read("$.id");
-        assertThat(expectedId).isNotNull();
+        assertThat(expectedId).isEqualTo(99);
     }
 
 }
