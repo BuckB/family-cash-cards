@@ -7,6 +7,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -19,6 +22,10 @@ class CashCardControllerTest {
     void shouldReturnCashCardWhenDataIsSaved() {
         ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards/99", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext responseJson = JsonPath.parse(response.getBody());
+        Number expectedId = responseJson.read("$.id");
+        assertThat(expectedId).isNotNull();
     }
 
 }
