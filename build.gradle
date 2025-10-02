@@ -10,7 +10,7 @@ description = 'CashCard service for Family Cash Cards'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(25)
+		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
 
@@ -25,17 +25,19 @@ repositories {
 }
 
 ext {
-	set('springModulithVersion', "1.4.1")
+	springModulithVersion = '1.4.1'
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.modulith:spring-modulith-starter-core'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+  	runtimeOnly 'com.h2database:h2'
 }
 
 dependencyManagement {
@@ -46,4 +48,19 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// This section causes useful test output to go to the terminal.
+test {
+    testLogging {
+        events "passed", "skipped", "failed" //, "standardOut", "standardError"
+
+        showExceptions true
+        exceptionFormat "full"
+        showCauses true
+        showStackTraces true
+
+        // Change to `true` for more verbose test output
+        showStandardStreams = true
+    }
 }
