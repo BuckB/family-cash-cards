@@ -21,6 +21,7 @@ class CashCardControllerTest {
     void shouldReturnCashCardWhenDataIsSaved() {
         ResponseEntity<CashCard> response = this.restTemplate.getForEntity("/cashcards/99", CashCard.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().id()).isEqualTo(99L);
 
         BigDecimal expectedAmount = new BigDecimal("123.45");

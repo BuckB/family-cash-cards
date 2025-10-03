@@ -18,7 +18,7 @@ public class CashCardJsonTest {
     private JacksonTester<CashCard> json;
 
     private CashCard expectedEntity;
-    private String expectedJson = """
+    private final String expectedJson = """
                 {
                     "id": 99,
                     "amount": 123.45
