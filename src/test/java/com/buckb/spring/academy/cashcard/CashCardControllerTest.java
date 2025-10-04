@@ -45,6 +45,15 @@ class CashCardControllerTest {
         CashCard newCashCard = new CashCard(null, new BigDecimal("55.55"));
         ResponseEntity<Void> response = this.restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        var savedCashCard = this.restTemplate.getForEntity(response.getHeaders().getLocation(), String.class);
+        assertThat(savedCashCard.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(savedCashCard.getBody());
+        Number id = documentContext.read("$.id");
+        Double amount = documentContext.read("$.amount");
+        assertThat(id).isNotNull();
+        assertThat(amount).isEqualTo(55.55);
     }
 
 }
