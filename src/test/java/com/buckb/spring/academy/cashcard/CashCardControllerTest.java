@@ -35,4 +35,11 @@ class CashCardControllerTest {
         assertThat(response.getBody()).isNull();
     }
 
+    @Test
+    void shouldReturn201WhenDataIsCreated() {
+        CashCard newCashCard = new CashCard(null, new BigDecimal("55.55"));
+        ResponseEntity<Void> response = this.restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
 }
