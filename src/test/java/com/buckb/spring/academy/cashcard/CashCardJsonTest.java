@@ -1,33 +1,31 @@
 package com.buckb.spring.academy.cashcard;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
 public class CashCardJsonTest {
 
-    @Autowired
-    private JacksonTester<CashCard> json;
-
-    @Autowired
-    private JacksonTester<CashCard[]> jsonList;
-
-    private CashCard[] cashCardsList;
-    private CashCard expectedEntity;
     private final String expectedJson = """
                 {
                     "id": 99,
                     "amount": 123.45
                 }
             """;
+    @Autowired
+    private JacksonTester<CashCard> json;
+    @Autowired
+    private JacksonTester<CashCard[]> jsonList;
+    private CashCard[] cashCardsList;
+    private CashCard expectedEntity;
 
     @BeforeEach
     void setup() {
@@ -77,5 +75,10 @@ public class CashCardJsonTest {
     void cashCardDeserialization_shouldMatchIdAndAmount() throws IOException {
         assertThat(this.json.parse(this.expectedJson)).hasFieldOrPropertyWithValue("id", 99L);
         assertThat(this.json.parse(this.expectedJson)).hasFieldOrPropertyWithValue("amount", new BigDecimal("123.45"));
+    }
+
+    @Test
+    void cashCardListSerializationTest() throws IOException {
+        assertThat(this.jsonList.write(this.cashCardsList)).isStrictlyEqualToJson("list.json");
     }
 }
