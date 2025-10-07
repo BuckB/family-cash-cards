@@ -82,4 +82,15 @@ class CashCardControllerTest {
         assertThat(amounts).containsExactlyInAnyOrder(123.45, 1, 150.00, 200.00, 37, 5, 9.20,
                 75, 22, 3);
     }
+
+    @Test
+    @DisplayName("FindAll should return paginated response")
+    void givenCashCardsExists_WhenFindAll_thenResponseShouldBePaginated() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/cashcards?page=0&size=4", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext context = JsonPath.parse(response.getBody());
+        JSONArray page = context.read("$[*]");
+        assertThat(page.size()).isEqualTo(4);
+    }
 }
