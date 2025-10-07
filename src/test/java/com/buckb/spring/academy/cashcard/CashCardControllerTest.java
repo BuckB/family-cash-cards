@@ -1,7 +1,9 @@
 package com.buckb.spring.academy.cashcard;
 
+import java.math.BigDecimal;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,8 +67,19 @@ class CashCardControllerTest {
         ResponseEntity<String> response = restTemplate.getForEntity("/cashcards", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         DocumentContext context = JsonPath.parse(response.getBody());
-        int listSize = context.read("$.length()" );
+        int listSize = context.read("$.length()");
         assertThat(listSize).isEqualTo(10);
     }
 
+    @Test
+    @DisplayName("FindAll response should contain valid data")
+    void givenCashCardsExists_WhenFindAll_thenShouldReturnValidData() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/cashcards", String.class);
+        DocumentContext context = JsonPath.parse(response.getBody());
+        JSONArray ids = context.read("$..id");
+        JSONArray amounts = context.read("$..amount");
+        assertThat(ids).containsExactlyInAnyOrder(99, 100, 101, 102, 103, 104, 105, 106, 107, 108);
+        assertThat(amounts).containsExactlyInAnyOrder(123.45, 1, 150.00, 200.00, 37, 5, 9.20,
+                75, 22, 3);
+    }
 }
