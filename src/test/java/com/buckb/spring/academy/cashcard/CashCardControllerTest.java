@@ -1,9 +1,9 @@
 package com.buckb.spring.academy.cashcard;
 
-import java.math.BigDecimal;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
+
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,7 +67,7 @@ class CashCardControllerTest {
     @Test
     @DisplayName("FindAll should return a list containing all CashCards, if any.")
     void givenCashCardsExists_whenFindAll_thenShouldReturnListOfCashCards() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/cashcards", String.class);
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         DocumentContext context = JsonPath.parse(response.getBody());
         int listSize = context.read("$.length()");
@@ -74,7 +77,7 @@ class CashCardControllerTest {
     @Test
     @DisplayName("FindAll response should contain valid data")
     void givenCashCardsExists_WhenFindAll_thenShouldReturnValidData() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/cashcards", String.class);
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards", String.class);
         DocumentContext context = JsonPath.parse(response.getBody());
         JSONArray ids = context.read("$..id");
         JSONArray amounts = context.read("$..amount");
@@ -86,11 +89,25 @@ class CashCardControllerTest {
     @Test
     @DisplayName("FindAll should return paginated response")
     void givenCashCardsExists_WhenFindAll_thenResponseShouldBePaginated() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/cashcards?page=0&size=4", String.class);
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards?page=0&size=4", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext context = JsonPath.parse(response.getBody());
         JSONArray page = context.read("$[*]");
         assertThat(page.size()).isEqualTo(4);
+    }
+
+    @Test
+    @DisplayName("FindAll paginated with sorting should return sorted response")
+    void givenCashCardsExists_WhenFindAll_withSortOrder_thenResponseShouldBePaginatedAndSorted() {
+        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards?page=0&size=5&sort=amount,desc",
+                String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext context = JsonPath.parse(response.getBody());
+        JSONArray page = context.read("$[*]");
+        assertThat(page.size()).isEqualTo(5);
+        Number actualAmount = context.read("$[0].amount");
+        assertThat(actualAmount).isEqualTo(200.00);
     }
 }
