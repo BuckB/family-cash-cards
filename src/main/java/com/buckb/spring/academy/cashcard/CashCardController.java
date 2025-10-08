@@ -27,8 +27,7 @@ public class CashCardController {
     @GetMapping("/{id}")
     public ResponseEntity<CashCard> findById(@PathVariable Long id) {
         Optional<CashCard> response = this.cashCardRepository.findById(id);
-        return response.isPresent() ? ResponseEntity.ok(response.get()) : ResponseEntity.notFound().build();
-        // alternative: return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return response.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -45,7 +44,8 @@ public class CashCardController {
         Page<CashCard> page = this.cashCardRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
-                        pageable.getPageSize()
+                        pageable.getPageSize(),
+                        pageable.getSort()
                 ));
         return ResponseEntity.ok(page.getContent());
     }
