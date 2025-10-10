@@ -50,7 +50,7 @@ class CashCardControllerTest {
     @DirtiesContext
     @DisplayName("When creating new valid CashCard, it should return 201_CREATED")
     void givenValidCashCard_whenCreate_thenShouldReturn201Created() {
-        CashCard newCashCard = new CashCard(null, new BigDecimal("55.55"));
+        CashCard newCashCard = new CashCard(null, new BigDecimal("55.55"), "Jose");
         ResponseEntity<Void> response = this.restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 

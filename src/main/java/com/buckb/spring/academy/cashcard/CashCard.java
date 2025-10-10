@@ -4,5 +4,5 @@ import java.math.BigDecimal;
 
 import org.springframework.data.annotation.Id;
 
-public record CashCard(@Id Long id, BigDecimal amount) {
+public record CashCard(@Id Long id, BigDecimal amount, String owner) {
 }

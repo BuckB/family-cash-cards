@@ -1,13 +1,13 @@
 package com.buckb.spring.academy.cashcard;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
-
-import java.io.IOException;
-import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,30 +17,33 @@ public class CashCardJsonTest {
     private final String expectedJson = """
                 {
                     "id": 99,
-                    "amount": 123.45
+                    "amount": 123.45,
+                    "owner": "Kenshin"
                 }
             """;
     @Autowired
     private JacksonTester<CashCard> json;
+
     @Autowired
     private JacksonTester<CashCard[]> jsonList;
+
     private CashCard[] cashCardsList;
     private CashCard expectedEntity;
 
     @BeforeEach
     void setup() {
-        this.expectedEntity = new CashCard(99L, new BigDecimal("123.45"));
+        this.expectedEntity = new CashCard(99L, new BigDecimal("123.45"), "Kenshin");
         this.cashCardsList = new CashCard[] {
-                new CashCard(99L, new BigDecimal("123.45")),
-                new CashCard(100L, new BigDecimal("1.00")),
-                new CashCard(101L, new BigDecimal("150.00")),
-                new CashCard(102L, new BigDecimal("200.00")),
-                new CashCard(103L, new BigDecimal("37.00")),
-                new CashCard(104L, new BigDecimal("5.00")),
-                new CashCard(105L, new BigDecimal("9.20")),
-                new CashCard(106L, new BigDecimal("75.00")),
-                new CashCard(107L, new BigDecimal("22.00")),
-                new CashCard(108L, new BigDecimal("3.00"))
+                new CashCard(99L, new BigDecimal("123.45"), "Kenshin"),
+                new CashCard(100L, new BigDecimal("1.00"), "Pierre"),
+                new CashCard(101L, new BigDecimal("150.00"), "Kenshin"),
+                new CashCard(102L, new BigDecimal("200.00"), "Sarah1"),
+                new CashCard(103L, new BigDecimal("37.00"), "Sarah1"),
+                new CashCard(104L, new BigDecimal("5.00"), "Pierre"),
+                new CashCard(105L, new BigDecimal("9.20"), "Sarah1"),
+                new CashCard(106L, new BigDecimal("75.00"), "Sarah1"),
+                new CashCard(107L, new BigDecimal("22.00"), "Pierre"),
+                new CashCard(108L, new BigDecimal("3.00"), "Kenshin")
         };
     }
 
@@ -86,16 +89,16 @@ public class CashCardJsonTest {
     void setCashCardListDeserializationTest() throws IOException {
         String expected = """
                     [
-                        {"id": 99, "amount": 123.45},
-                        {"id": 100, "amount": 1.00},
-                        {"id": 101, "amount": 150.00},
-                        {"id": 102, "amount": 200.00},
-                        {"id": 103, "amount": 37.00},
-                        {"id": 104, "amount": 5.00},
-                        {"id": 105, "amount": 9.20},
-                        {"id": 106, "amount": 75.00},
-                        {"id": 107, "amount": 22.00},
-                        {"id": 108, "amount": 3.00}
+                        {"id": 99, "amount": 123.45, "owner": "Kenshin"},
+                        {"id": 100, "amount": 1.00, "owner": "Pierre"},
+                        {"id": 101, "amount": 150.00, "owner": "Kenshin"},
+                        {"id": 102, "amount": 200.00, "owner": "Sarah1"},
+                        {"id": 103, "amount": 37.00, "owner": "Sarah1"},
+                        {"id": 104, "amount": 5.00, "owner": "Pierre"},
+                        {"id": 105, "amount": 9.20, "owner": "Sarah1"},
+                        {"id": 106, "amount": 75.00, "owner": "Sarah1"},
+                        {"id": 107, "amount": 22.00, "owner": "Pierre"},
+                        {"id": 108, "amount": 3.00, "owner": "Kenshin"}
                     ]
                 """;
 
