@@ -27,7 +27,7 @@ class CashCardControllerTest {
     @Test
     @DisplayName("When CashCard exists, FindById should return valid data")
     void givenDataIsSaved_whenFindById_thenShouldReturnCashCard() {
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards/99", String.class);
+    ResponseEntity<String> response = this.restTemplate.withBasicAuth("Sarah1", "abc123").getForEntity("/cashcards/99", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -41,7 +41,7 @@ class CashCardControllerTest {
     @Test
     @DisplayName("When CashCard doesn't exist, FindById should not return data")
     void givenDataDoesntExist_whenFindById_shouldReturn404NotFound() {
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards/1", String.class);
+    ResponseEntity<String> response = this.restTemplate.withBasicAuth("Sarah1", "abc123").getForEntity("/cashcards/1", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isBlank();
     }
@@ -51,10 +51,10 @@ class CashCardControllerTest {
     @DisplayName("When creating new valid CashCard, it should return 201_CREATED")
     void givenValidCashCard_whenCreate_thenShouldReturn201Created() {
         CashCard newCashCard = new CashCard(null, new BigDecimal("55.55"), "Jose");
-        ResponseEntity<Void> response = this.restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
+    ResponseEntity<Void> response = this.restTemplate.withBasicAuth("Sarah1", "abc123").postForEntity("/cashcards", newCashCard, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        var savedCashCard = this.restTemplate.getForEntity(response.getHeaders().getLocation(), String.class);
+    var savedCashCard = this.restTemplate.withBasicAuth("Sarah1", "abc123").getForEntity(response.getHeaders().getLocation(), String.class);
         assertThat(savedCashCard.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(savedCashCard.getBody());
@@ -67,7 +67,7 @@ class CashCardControllerTest {
     @Test
     @DisplayName("FindAll should return a list containing all CashCards, if any.")
     void givenCashCardsExists_whenFindAll_thenShouldReturnListOfCashCards() {
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards", String.class);
+    ResponseEntity<String> response = this.restTemplate.withBasicAuth("Sarah1", "abc123").getForEntity("/cashcards", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         DocumentContext context = JsonPath.parse(response.getBody());
         int listSize = context.read("$.length()");
@@ -77,7 +77,7 @@ class CashCardControllerTest {
     @Test
     @DisplayName("FindAll response should contain valid data")
     void givenCashCardsExists_WhenFindAll_thenShouldReturnValidData() {
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards", String.class);
+    ResponseEntity<String> response = this.restTemplate.withBasicAuth("Sarah1", "abc123").getForEntity("/cashcards", String.class);
         DocumentContext context = JsonPath.parse(response.getBody());
         JSONArray ids = context.read("$..id");
         JSONArray amounts = context.read("$..amount");
@@ -89,7 +89,7 @@ class CashCardControllerTest {
     @Test
     @DisplayName("FindAll should return paginated response")
     void givenCashCardsExists_WhenFindAll_thenResponseShouldBePaginated() {
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards?page=0&size=4", String.class);
+    ResponseEntity<String> response = this.restTemplate.withBasicAuth("Sarah1", "abc123").getForEntity("/cashcards?page=0&size=4", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext context = JsonPath.parse(response.getBody());
@@ -100,8 +100,8 @@ class CashCardControllerTest {
     @Test
     @DisplayName("FindAll paginated with sorting should return sorted response")
     void givenCashCardsExists_WhenFindAll_withSortOrder_thenResponseShouldBePaginatedAndSorted() {
-        ResponseEntity<String> response = this.restTemplate.getForEntity("/cashcards?page=0&size=5&sort=amount,desc",
-                String.class);
+    ResponseEntity<String> response = this.restTemplate.withBasicAuth("Sarah1", "abc123").getForEntity("/cashcards?page=0&size=5&sort=amount,desc",
+        String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext context = JsonPath.parse(response.getBody());
