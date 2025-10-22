@@ -1,5 +1,6 @@
 package com.buckb.spring.academy.cashcard;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -25,14 +26,19 @@ public class CashCardController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CashCard> findById(@PathVariable Long id) {
-        Optional<CashCard> response = this.cashCardRepository.findById(id);
-        return response.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CashCard> findById(@PathVariable Long id, Principal principal) {
+        Optional<CashCard> response = this.cashCardRepository
+                .findByIdAndOwner(id, principal.getName());
+        return response.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody CashCard newCashCard, UriComponentsBuilder uriBuilder) {
-        CashCard savedCashCard = this.cashCardRepository.save(newCashCard);
+    public ResponseEntity<Void> create(@RequestBody CashCard newCashCard,
+            UriComponentsBuilder uriBuilder, Principal principal) {
+        CashCard cardToSave = new CashCard(null, newCashCard.amount(), principal.getName());
+        CashCard savedCashCard = this.cashCardRepository.save(cardToSave);
+
         var location = uriBuilder.path("/cashcards/{id}")
                 .buildAndExpand(savedCashCard.id())
                 .toUri();
@@ -40,13 +46,14 @@ public class CashCardController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<CashCard>> findAll(Pageable pageable) {
-        Page<CashCard> page = this.cashCardRepository.findAll(
+    public ResponseEntity<Iterable<CashCard>> findAll(Pageable pageable, Principal principal) {
+        Page<CashCard> page = this.cashCardRepository.findByOwner(
+                principal.getName(),
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
-                        pageable.getSort()
-                ));
+                        pageable.getSort()));
+
         return ResponseEntity.ok(page.getContent());
     }
 }
