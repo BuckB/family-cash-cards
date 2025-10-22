@@ -18,7 +18,7 @@ public class CashCardJsonTest {
                 {
                     "id": 99,
                     "amount": 123.45,
-                    "owner": "Kenshin"
+                    "owner": "Sarah1"
                 }
             """;
     @Autowired
@@ -32,18 +32,18 @@ public class CashCardJsonTest {
 
     @BeforeEach
     void setup() {
-        this.expectedEntity = new CashCard(99L, new BigDecimal("123.45"), "Kenshin");
+        this.expectedEntity = new CashCard(99L, new BigDecimal("123.45"), "Sarah1");
         this.cashCardsList = new CashCard[] {
-                new CashCard(99L, new BigDecimal("123.45"), "Kenshin"),
+                new CashCard(99L, new BigDecimal("123.45"), "Sarah1"),
                 new CashCard(100L, new BigDecimal("1.00"), "Pierre"),
-                new CashCard(101L, new BigDecimal("150.00"), "Kenshin"),
+                new CashCard(101L, new BigDecimal("150.00"), "Alex"),
                 new CashCard(102L, new BigDecimal("200.00"), "Sarah1"),
                 new CashCard(103L, new BigDecimal("37.00"), "Sarah1"),
                 new CashCard(104L, new BigDecimal("5.00"), "Pierre"),
                 new CashCard(105L, new BigDecimal("9.20"), "Sarah1"),
                 new CashCard(106L, new BigDecimal("75.00"), "Sarah1"),
                 new CashCard(107L, new BigDecimal("22.00"), "Pierre"),
-                new CashCard(108L, new BigDecimal("3.00"), "Kenshin")
+                new CashCard(108L, new BigDecimal("3.00"), "Alex")
         };
     }
 
@@ -89,16 +89,16 @@ public class CashCardJsonTest {
     void setCashCardListDeserializationTest() throws IOException {
         String expected = """
                     [
-                        {"id": 99, "amount": 123.45, "owner": "Kenshin"},
+                        {"id": 99, "amount": 123.45, "owner": "Sarah1"},
                         {"id": 100, "amount": 1.00, "owner": "Pierre"},
-                        {"id": 101, "amount": 150.00, "owner": "Kenshin"},
+                        {"id": 101, "amount": 150.00, "owner": "Alex"},
                         {"id": 102, "amount": 200.00, "owner": "Sarah1"},
                         {"id": 103, "amount": 37.00, "owner": "Sarah1"},
                         {"id": 104, "amount": 5.00, "owner": "Pierre"},
                         {"id": 105, "amount": 9.20, "owner": "Sarah1"},
                         {"id": 106, "amount": 75.00, "owner": "Sarah1"},
                         {"id": 107, "amount": 22.00, "owner": "Pierre"},
-                        {"id": 108, "amount": 3.00, "owner": "Kenshin"}
+                        {"id": 108, "amount": 3.00, "owner": "Alex"}
                     ]
                 """;
 

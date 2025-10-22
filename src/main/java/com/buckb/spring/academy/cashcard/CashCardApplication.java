@@ -10,7 +10,6 @@ public class CashCardApplication {
 
 	public static void main(String[] args) {
 		Dotenv.configure()
-				.ignoreIfMalformed()
 				.systemProperties()
 				.load();
 
