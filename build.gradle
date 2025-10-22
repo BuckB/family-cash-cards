@@ -39,7 +39,8 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-  	implementation 'com.h2database:h2'
+  	runtimeOnly 'com.h2database:h2'
+	implementation 'io.github.cdimascio:dotenv-java:3.2.0'
 }
 
 dependencyManagement {
