@@ -33,14 +33,14 @@ dependencies {
 	implementation 'org.springframework.modulith:spring-modulith-starter-core'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'io.github.cdimascio:dotenv-java:3.2.0'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-  	runtimeOnly 'com.h2database:h2'
-	implementation 'io.github.cdimascio:dotenv-java:3.2.0'
+	runtimeOnly 'com.h2database:h2'
 }
 
 dependencyManagement {
