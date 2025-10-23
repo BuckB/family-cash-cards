@@ -158,7 +158,8 @@ class CashCardControllerTest {
 
                 Long id = JsonPath.parse(existingCashCardEntity.getBody()).read("$.id", Long.class);
                 String owner = JsonPath.parse(existingCashCardEntity.getBody()).read("$.owner");
-                CashCard toUpdate = new CashCard(id, new BigDecimal("999.99"), owner);
+                // Can pass null for ID, as it is taken from the path variable, or you can pass the same ID
+                CashCard toUpdate = new CashCard(null, new BigDecimal("999.99"), owner);
 
                 ResponseEntity<Void> updateResponse = this.restTemplate
                                 .withBasicAuth("Sarah1", "abc123")

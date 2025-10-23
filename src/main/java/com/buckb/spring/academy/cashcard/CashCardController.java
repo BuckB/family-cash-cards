@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,5 +56,28 @@ public class CashCardController {
                         pageable.getSort()));
 
         return ResponseEntity.ok(page.getContent());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody CashCard updatedCashCard,
+            Principal principal) {
+        if (id == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (updatedCashCard.id() != null && !updatedCashCard.id().equals(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Optional<CashCard> existingCard = this.cashCardRepository.findByIdAndOwner(id, principal.getName());
+        if (existingCard.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        CashCard cardToSave = new CashCard(
+                id,
+                updatedCashCard.amount(),
+                principal.getName());
+        this.cashCardRepository.save(cardToSave);
+        return ResponseEntity.noContent().build();
     }
 }
