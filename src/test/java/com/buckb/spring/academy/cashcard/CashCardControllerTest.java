@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -145,4 +147,24 @@ class CashCardControllerTest {
                                 .getForEntity("/cashcards", String.class);
                 assertThat(testInvalidPassword.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         }
+
+        @Test
+        @DisplayName("When updating an existing CashCard, it should return 204_NO_CONTENT")
+        void givenExistingCashCard_whenUpdate_thenShouldReturn204NoContent() {
+                ResponseEntity<String> existingCashCardEntity = this.restTemplate
+                                .withBasicAuth("Sarah1", "abc123")
+                                .getForEntity("/cashcards/99", String.class);
+                assertThat(existingCashCardEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+                Long id = JsonPath.parse(existingCashCardEntity.getBody()).read("$.id", Long.class);
+                String owner = JsonPath.parse(existingCashCardEntity.getBody()).read("$.owner");
+                CashCard toUpdate = new CashCard(id, new BigDecimal("999.99"), owner);
+
+                ResponseEntity<Void> updateResponse = this.restTemplate
+                                .withBasicAuth("Sarah1", "abc123")
+                                .exchange("/cashcards/{id}", HttpMethod.PUT, new HttpEntity<>(toUpdate), Void.class, id);
+                assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        }
+
+        //Next test: will return a 404_NOT_FOUND for an unauthorized update, as well as attempts to update nonexistent IDs.
 }
