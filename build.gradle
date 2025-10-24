@@ -18,6 +18,9 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	mockitoAgent {
+		transitive = false
+	}
 }
 
 repositories {
@@ -29,6 +32,7 @@ ext {
 }
 
 dependencies {
+    mockitoAgent 'org.mockito:mockito-core:5.20.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.modulith:spring-modulith-starter-core'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
@@ -49,21 +53,18 @@ dependencyManagement {
 	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
-// This section causes useful test output to go to the terminal.
 test {
-    testLogging {
-        events "passed", "skipped", "failed" //, "standardOut", "standardError"
+	useJUnitPlatform()
+	jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
+	testLogging {
+		events "passed", "skipped", "failed" //, "standardOut", "standardError"
 
-        showExceptions true
-        exceptionFormat "full"
-        showCauses true
-        showStackTraces true
+		showExceptions true
+		exceptionFormat "full"
+		showCauses true
+		showStackTraces true
 
-        // Change to `true` for more verbose test output
-        showStandardStreams = true
-    }
+		// Change to `true` for more verbose test output
+		showStandardStreams = true
+	}
 }
