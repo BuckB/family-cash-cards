@@ -149,6 +149,7 @@ class CashCardControllerTest {
         }
 
         @Test
+        @DirtiesContext
         @DisplayName("When updating an existing CashCard, it should return 204_NO_CONTENT")
         void givenExistingCashCard_whenUpdate_thenShouldReturn204NoContent() {
                 Long id = 99L;
@@ -172,6 +173,7 @@ class CashCardControllerTest {
         }
 
         @Test
+        @DirtiesContext
         @DisplayName("When updating a non-existing CashCard, it should return 404_NOT_FOUND")
         void givenNonExistingCashCard_whenUpdate_thenShouldReturn404NotFound() {
                 Long id = 1L;
@@ -187,6 +189,7 @@ class CashCardControllerTest {
         }
 
         @Test
+        @DirtiesContext
         @DisplayName("When updating a CashCard of another owner, it should return 404_NOT_FOUND")
         void givenCashCardOfAnotherOwner_whenUpdate_thenShouldReturn404NotFound() {
                 Long id = 100L; // Belongs to Pierre
