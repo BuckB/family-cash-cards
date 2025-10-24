@@ -151,21 +151,53 @@ class CashCardControllerTest {
         @Test
         @DisplayName("When updating an existing CashCard, it should return 204_NO_CONTENT")
         void givenExistingCashCard_whenUpdate_thenShouldReturn204NoContent() {
+                Long id = 99L;
                 ResponseEntity<String> existingCashCardEntity = this.restTemplate
                                 .withBasicAuth("Sarah1", "abc123")
-                                .getForEntity("/cashcards/99", String.class);
+                                .getForEntity("/cashcards/{id}", String.class, id);
                 assertThat(existingCashCardEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-                Long id = JsonPath.parse(existingCashCardEntity.getBody()).read("$.id", Long.class);
                 String owner = JsonPath.parse(existingCashCardEntity.getBody()).read("$.owner");
                 // Can pass null for ID, as it is taken from the path variable, or you can pass the same ID
                 CashCard toUpdate = new CashCard(null, new BigDecimal("999.99"), owner);
 
                 ResponseEntity<Void> updateResponse = this.restTemplate
                                 .withBasicAuth("Sarah1", "abc123")
-                                .exchange("/cashcards/{id}", HttpMethod.PUT, new HttpEntity<>(toUpdate), Void.class, id);
+                                .exchange("/cashcards/{id}",
+                                                HttpMethod.PUT,
+                                                new HttpEntity<>(toUpdate),
+                                                Void.class,
+                                                id);
                 assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }
 
-        //Next test: will return a 404_NOT_FOUND for an unauthorized update, as well as attempts to update nonexistent IDs.
+        @Test
+        @DisplayName("When updating a non-existing CashCard, it should return 404_NOT_FOUND")
+        void givenNonExistingCashCard_whenUpdate_thenShouldReturn404NotFound() {
+                Long id = 1L;
+                CashCard toUpdate = new CashCard(null, new BigDecimal("0.99"), "Sarah1");
+                ResponseEntity<Void> updateResponse = this.restTemplate
+                                .withBasicAuth("Sarah1", "abc123")
+                                .exchange("/cashcards/{id}",
+                                                HttpMethod.PUT,
+                                                new HttpEntity<>(toUpdate),
+                                                Void.class,
+                                                id);
+                assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("When updating a CashCard of another owner, it should return 404_NOT_FOUND")
+        void givenCashCardOfAnotherOwner_whenUpdate_thenShouldReturn404NotFound() {
+                Long id = 100L; // Belongs to Pierre
+                CashCard toUpdate = new CashCard(null, new BigDecimal("0.99"), "Sarah1");
+                ResponseEntity<Void> updateResponse = this.restTemplate
+                                .withBasicAuth("Sarah1", "abc123")
+                                .exchange("/cashcards/{id}",
+                                                HttpMethod.PUT,
+                                                new HttpEntity<>(toUpdate),
+                                                Void.class,
+                                                id);
+                assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
 }
