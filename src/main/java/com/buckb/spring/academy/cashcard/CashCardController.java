@@ -70,8 +70,7 @@ public class CashCardController {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<CashCard> existingCard = this.cashCardRepository.findByIdAndOwner(id, principal.getName());
-        if (existingCard.isEmpty()) {
+        if (!this.cashCardRepository.existsByIdAndOwner(id, principal.getName())) {
             return ResponseEntity.notFound().build();
         }
         CashCard cardToSave = new CashCard(
@@ -84,8 +83,7 @@ public class CashCardController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id, Principal principal) {
-        Optional<CashCard> existingCard = this.cashCardRepository.findByIdAndOwner(id, principal.getName());
-        if (existingCard.isEmpty()) {
+        if (!this.cashCardRepository.existsByIdAndOwner(id, principal.getName())) {
             return ResponseEntity.notFound().build();
         }
         this.cashCardRepository.deleteById(id);
