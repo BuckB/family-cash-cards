@@ -218,4 +218,24 @@ class CashCardControllerTest {
                                                 id);
                 assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         }
+
+        @Test
+        @DirtiesContext
+        @DisplayName("When deleting an existing CashCard, when finding it again should return 404_NOT_FOUND")
+        void givenExistingCashCard_whenDeleteAndFindById_thenShouldReturn404NotFound() {
+                Long id = 99L;
+                ResponseEntity<Void> deleteResponse = this.restTemplate
+                                .withBasicAuth("Sarah1", "abc123")
+                                .exchange("/cashcards/{id}",
+                                                HttpMethod.DELETE,
+                                                null,
+                                                Void.class,
+                                                id);
+                assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+                ResponseEntity<String> findResponse = this.restTemplate
+                                .withBasicAuth("Sarah1", "abc123")
+                                .getForEntity("/cashcards/{id}", String.class, id);
+                assertThat(findResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
 }
