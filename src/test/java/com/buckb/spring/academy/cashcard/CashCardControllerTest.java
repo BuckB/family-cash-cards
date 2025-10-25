@@ -203,4 +203,19 @@ class CashCardControllerTest {
                                                 id);
                 assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         }
+
+        @Test
+        @DirtiesContext
+        @DisplayName("When deleting an existing CashCard, it should return 204_NO_CONTENT")
+        void givenExistingCashCard_whenDelete_thenShouldReturn204NoContent() {
+                Long id = 99L;
+                ResponseEntity<Void> deleteResponse = this.restTemplate
+                                .withBasicAuth("Sarah1", "abc123")
+                                .exchange("/cashcards/{id}",
+                                                HttpMethod.DELETE,
+                                                null,
+                                                Void.class,
+                                                id);
+                assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        }
 }
