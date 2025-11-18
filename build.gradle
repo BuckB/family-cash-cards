@@ -32,12 +32,12 @@ ext {
 }
 
 dependencies {
-    mockitoAgent 'org.mockito:mockito-core:5.20.0'
+    mockitoAgent 'org.mockito:mockito-core:5.20.0' // https://mvnrepository.com/artifact/org.mockito/mockito-core
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.modulith:spring-modulith-starter-core'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'io.github.cdimascio:dotenv-java:3.2.0'
+	implementation 'io.github.cdimascio:dotenv-java:3.2.0' // https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
